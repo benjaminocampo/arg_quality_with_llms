@@ -1,0 +1,4 @@
+openai
+pandas
+google-generativeai
+vllm
