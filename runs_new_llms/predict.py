@@ -1,0 +1,193 @@
+import csv
+import time
+from vllm import LLM, SamplingParams
+from collections import defaultdict
+import pandas as pd
+import os
+from dotenv import load_dotenv
+from huggingface_hub import login
+from omegaconf import DictConfig, OmegaConf
+import hydra
+
+
+load_dotenv()
+
+HF_TOKEN = os.getenv("HF_TOKEN")
+login(HF_TOKEN)
+
+# NUM_ARGUMENTS =  750      # Number of arguments to sample from the dataset       
+#SLEEP_EVERY = 100              
+#SLEEP_DURATION = 10  
+#          
+# Prompt templates for each quality dimension
+PROMPTS = {
+    "logic": (
+        "You are given two arguments: Argument A and Argument B.\n"
+        "Decide which one is logically stronger based on these criteria only:\n"
+        "- which is more acceptable/credible \n"
+        "- which is more relevant to a conclusion\n"
+        "- which is more sufficient to justify a conclusion\n"
+        "Reply with only one of the following options: A, B, or tie. Do NOT add any other text.\n"
+        "Argument A: {a}\nArgument B: {b}"
+    ),
+    "rhetoric": (
+        "You are given two arguments: Argument A and Argument B.\n"
+        "Decide which one is rhetorically stronger based on these criteria only:\n"
+        "- which appears more authorative/trust worthy\n"
+        "- which makes a stronger emotional appeal\n"
+        "- which is clear and more appriopriate in tone\n"
+        "Reply with only one of the following options: A, B, or tie. Do NOT add any other text.\n"
+        "Argument A: {a}\nArgument B: {b}"
+    ),
+    "dialectic": (
+        "You are given two arguments: Argument A and Argument B.\n"
+        "Decide which one is dialectically stronger based on these criteria only:\n"
+        "- which would be acceptable to the audience\n"
+        "- which contributes more to constructive dialogue\n"
+        "- which better anticipates or refutes counterarguments\n"
+        "Reply with only one of the following options: A, B, or tie. Do not provide any explanation.\n"
+        "Argument A: {a}\nArgument B: {b}"
+    ),
+}
+
+
+# Group sampled arguments by topic, and track their original list index
+def group_args_by_topic_with_indices(sampled_args):
+    grouped = defaultdict(list)
+    for idx, arg in enumerate(sampled_args):
+        arg['global_index'] = idx  # track position in original list
+        grouped[arg['topic_id']].append(arg)
+    return grouped
+
+# Generate cyclic pairs within each topic group
+def create_cyclic_pairs_within_topics(grouped_args, step=3):
+    all_pairs = []
+    for topic_id, args in grouped_args.items():
+        n = len(args)
+        if n < 2:
+            continue  # skip topics with only one argument
+        for i in range(n):
+            for j in range(1, step + 1):
+                a = args[i]['global_index']
+                b = args[(i + j) % n]['global_index']
+                pair = tuple(sorted((a, b)))
+                if pair not in all_pairs:
+                    all_pairs.append(pair)
+    return all_pairs
+
+
+# Function to send a pair of arguments to the Together AI API and get a comparison result
+def comparisons(a, b, prompt_template, llm):
+    #client = Together()  
+    prompt = prompt_template.format(a=a['premise'], b=b['premise'])  
+    try:
+        sampling_params = SamplingParams(
+            temperature=0.0,
+        )
+
+        # Send prompt to the Together AI model
+        resp = llm.chat(
+                messages=[{"role": "user", "content": prompt}],
+                sampling_params=sampling_params,
+            )
+        #resp = client.chat.completions.create(
+        #    model=MODEL_NAME,
+        #    messages=[{"role": "user", "content": prompt}],
+        #    temperature=0.0
+        #)
+        # Extract the model's response
+        reply = resp.outputs[0].text.strip().lower()
+        #reply = resp.choices[0].message.content.strip().lower()
+
+        # Return winner based on model's response
+        if reply == "a":
+            return "A"
+        elif reply == "b":
+            return "B"
+        else:
+            return "tie"
+    except Exception as e:
+        print("API error:", e)
+        return None
+
+# Function to evaluate a batch of argument pairs for a specific dimension
+def run_dimension_comparison(dimension, sampled_args, sampled_pairs, model_name, model_path, tensor_parallel_size):
+    filename = f"{model_name}_{dimension}_comparisons_v2.csv"
+    llm = LLM(
+        model=model_path,
+        tensor_parallel_size=tensor_parallel_size,
+        dtype="auto",
+    )
+    prompt_template = PROMPTS[dimension]  
+
+    # Open output file and set up CSV writer with discussion IDs included
+    with open(filename, "w", newline='', encoding='utf-8-sig') as fout:
+        writer = csv.DictWriter(fout, fieldnames=[
+            'Discussion ID A', 'Argument ID A',
+            'Discussion ID B', 'Argument ID B',
+            'Comparison'
+        ])
+        writer.writeheader() 
+
+        # Loop over all sampled argument pairs
+        for idx, (i, j) in enumerate(sampled_pairs):
+            a = sampled_args[i]
+            b = sampled_args[j]
+
+            # Compare the pair using the current prompt
+            result = comparisons(a, b, prompt_template, llm)
+
+            # Write the result to the CSV, including discussion IDs
+            writer.writerow({
+                'Discussion ID A': a['discussion_id'],
+                'Argument ID A': a['argument_id'],
+                'Discussion ID B': b['discussion_id'],
+                'Argument ID B': b['argument_id'],
+                'Comparison': result
+            })
+
+            print(f"[{dimension.upper()}] Compared {idx+1}/{len(sampled_pairs)} - Result: {result}")
+
+            # Sleep every SLEEP_EVERY requests to avoid hitting the limits
+            #if (idx + 1) % SLEEP_EVERY == 0:
+            #    print("Break...") 
+            #    time.sleep(SLEEP_DURATION)
+
+    print(f"Finished writing {dimension} results to {filename}\n")
+
+@hydra.main(config_path="conf", config_name="config", version_base=None)
+def main(cfg: DictConfig):
+    OmegaConf.register_new_resolver("eval", lambda x: eval(x))
+
+    #sampled_df = pd.read_csv("sampled_args_reconstructed.csv")
+    sampled_df = pd.read_csv(cfg.data_path)
+    sampled_df.columns = sampled_df.columns.str.strip()
+    sampled_df.rename(columns={
+        "Topic ID": "topic_id",
+        "Discussion ID": "discussion_id",
+        "Argument ID": "argument_id",
+        "Premise": "premise"
+    }, inplace=True)    
+    sampled_args = sampled_df.to_dict(orient="records")
+
+    model_name = cfg.llm.name
+    model_path = cfg.llm.params.model_path
+    tensor_parallel_size = cfg.llm.params.tensor_parallel_size
+
+    # Group arguments by topic and generate cyclic pairs within topics
+    grouped_args = group_args_by_topic_with_indices(sampled_args)
+    sampled_pairs = create_cyclic_pairs_within_topics(grouped_args, step=3)
+
+    print(f"Generated {len(sampled_pairs)} within-topic cyclic pairs.")
+
+    # Loop through quality dimensions
+    for dimension in PROMPTS.keys():
+        run_dimension_comparison(dimension,
+                                 sampled_args,
+                                 sampled_pairs,
+                                 model_name,
+                                 model_path,
+                                 tensor_parallel_size)
+
+if __name__ == "__main__":
+    main()
