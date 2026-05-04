@@ -20,34 +20,41 @@ login(HF_TOKEN)
 #SLEEP_DURATION = 10  
 #          
 # Prompt templates for each quality dimension
+
 PROMPTS = {
-    "logic": (
-        "You are given two arguments: Argument A and Argument B.\n"
-        "Decide which one is logically stronger based on these criteria only:\n"
-        "- which is more acceptable/credible \n"
-        "- which is more relevant to a conclusion\n"
-        "- which is more sufficient to justify a conclusion\n"
-        "Reply with only one of the following options: A, B, or tie. Do NOT add any other text.\n"
-        "Argument A: {a}\nArgument B: {b}"
-    ),
-    "rhetoric": (
-        "You are given two arguments: Argument A and Argument B.\n"
-        "Decide which one is rhetorically stronger based on these criteria only:\n"
-        "- which appears more authorative/trust worthy\n"
-        "- which makes a stronger emotional appeal\n"
-        "- which is clear and more appriopriate in tone\n"
-        "Reply with only one of the following options: A, B, or tie. Do NOT add any other text.\n"
-        "Argument A: {a}\nArgument B: {b}"
-    ),
-    "dialectic": (
-        "You are given two arguments: Argument A and Argument B.\n"
-        "Decide which one is dialectically stronger based on these criteria only:\n"
-        "- which would be acceptable to the audience\n"
-        "- which contributes more to constructive dialogue\n"
-        "- which better anticipates or refutes counterarguments\n"
-        "Reply with only one of the following options: A, B, or tie. Do not provide any explanation.\n"
-        "Argument A: {a}\nArgument B: {b}"
-    ),
+    "logic": {
+        "system": (
+            "You are given two arguments: Argument A and Argument B.\n"
+            "Decide which one is logically stronger based on these criteria only:\n"
+            "- which is more acceptable/credible \n"
+            "- which is more relevant to a conclusion\n"
+            "- which is more sufficient to justify a conclusion\n"
+            "Reply with only one of the following options: A, B, or tie. Do NOT add any other text.\n"
+        ),
+        "user": "Argument A: {a}\nArgument B: {b}"
+    },
+    "rhetoric": {
+        "system": (
+            "You are given two arguments: Argument A and Argument B.\n"
+            "Decide which one is rhetorically stronger based on these criteria only:\n"
+            "- which appears more authorative/trust worthy\n"
+            "- which makes a stronger emotional appeal\n"
+            "- which is clear and more appriopriate in tone\n"
+            "Reply with only one of the following options: A, B, or tie. Do NOT add any other text.\n"
+        ),
+        "user": "Argument A: {a}\nArgument B: {b}"
+    }, 
+    "dialectic": {
+        "system": (
+            "You are given two arguments: Argument A and Argument B.\n"
+            "Decide which one is dialectically stronger based on these criteria only:\n"
+            "- which would be acceptable to the audience\n"
+            "- which contributes more to constructive dialogue\n"
+            "- which better anticipates or refutes counterarguments\n"
+            "Reply with only one of the following options: A, B, or tie. Do not provide any explanation.\n"
+        ), 
+        "user": "Argument A: {a}\nArgument B: {b}"
+    }
 }
 
 
@@ -142,12 +149,13 @@ def run_dimension_comparison(dimension, sampled_args, pairs, model_name, model_p
         for _, (i, j) in enumerate(pairs):
             a = sampled_args[i]
             b = sampled_args[j]        
-            prompt = prompt_template.format(a=a['premise'], b=b['premise'])  
+            prompt = prompt_template["user"].format(a=a['premise'], b=b['premise'])  
             prompts.append(prompt)
 
         # Send prompt to the Together AI model
         resp = llm.chat(
-            messages=[{"role": "user", "content": p} for p in prompts],
+            messages=[{"role": "system", "content": prompt_template["system"]},
+                      {"role": "user", "content": p} for p in prompts],
             sampling_params=sampling_params,
         )
         
