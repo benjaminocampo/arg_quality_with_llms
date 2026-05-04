@@ -80,42 +80,47 @@ def create_cyclic_pairs_within_topics(grouped_args, step=3):
 def comparisons(a, b, prompt_template, llm):
     #client = Together()  
     prompt = prompt_template.format(a=a['premise'], b=b['premise'])  
-    try:
-        sampling_params = SamplingParams(
-            temperature=0.0,
-        )
+    #try:
+    sampling_params = SamplingParams(
+        temperature=0.0,
+    )
 
-        # Send prompt to the Together AI model
-        resp = llm.chat(
-                messages=[{"role": "user", "content": prompt}],
-                sampling_params=sampling_params,
-            )
+    # Send prompt to the Together AI model
+    resp = llm.chat(
+            messages=[{"role": "user", "content": prompt}],
+            sampling_params=sampling_params,
+        )
         #resp = client.chat.completions.create(
         #    model=MODEL_NAME,
         #    messages=[{"role": "user", "content": prompt}],
         #    temperature=0.0
         #)
         # Extract the model's response
-        reply = resp.outputs[0].text.strip().lower()
+    #print(resp)
+    reply = resp[0].outputs[0].text.strip().lower()
+    #reply = resp.outputs[0].text.strip().lower()
         #reply = resp.choices[0].message.content.strip().lower()
 
         # Return winner based on model's response
-        if reply == "a":
-            return "A"
-        elif reply == "b":
-            return "B"
-        else:
-            return "tie"
-    except Exception as e:
-        print("API error:", e)
-        return None
+    if reply == "a":
+        return "A"
+    elif reply == "b":
+        return "B"
+    else:
+        return "tie"
+   # except Exception as e:
+   #     print("API error:", e)
+   #     return None
 
 # Function to evaluate a batch of argument pairs for a specific dimension
-def run_dimension_comparison(dimension, sampled_args, sampled_pairs, model_name, model_path, tensor_parallel_size):
+def run_dimension_comparison(dimension, sampled_args, sampled_pairs, model_name, model_path, tensor_parallel_size, max_model_len, max_num_batched_tokens):
     filename = f"{model_name}_{dimension}_comparisons_v2.csv"
     llm = LLM(
         model=model_path,
         tensor_parallel_size=tensor_parallel_size,
+        #max_model_len=max_model_len,
+        #max_num_batched_tokens=max_num_batched_tokens,
+        #decode_context_parallel_size=1,
         dtype="auto",
     )
     prompt_template = PROMPTS[dimension]  
@@ -171,8 +176,10 @@ def main(cfg: DictConfig):
     sampled_args = sampled_df.to_dict(orient="records")
 
     model_name = cfg.llm.name
-    model_path = cfg.llm.params.model_path
+    model_path = cfg.llm.params.model
     tensor_parallel_size = cfg.llm.params.tensor_parallel_size
+    max_model_len=cfg.llm.params.max_model_len
+    max_num_batched_tokens=cfg.llm.params.max_num_batched_tokens
 
     # Group arguments by topic and generate cyclic pairs within topics
     grouped_args = group_args_by_topic_with_indices(sampled_args)
@@ -187,7 +194,10 @@ def main(cfg: DictConfig):
                                  sampled_pairs,
                                  model_name,
                                  model_path,
-                                 tensor_parallel_size)
+                                 tensor_parallel_size,
+                                 max_model_len,
+                                 max_num_batched_tokens
+        )
 
 if __name__ == "__main__":
     main()

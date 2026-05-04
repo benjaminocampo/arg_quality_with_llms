@@ -1,5 +1,5 @@
 openai
 pandas
 google-generativeai
-vllm
+vllm==0.10.2
 hydra-core

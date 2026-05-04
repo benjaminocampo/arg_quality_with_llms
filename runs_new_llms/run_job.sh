@@ -10,7 +10,7 @@ set -euo pipefail
 # Checks that the user passed three argument (the task script file,
 # the experiment config file, and the LLM config file).
 # Otherwise, prints usage and exits.
-if [ $# -lt 3 ]; then
+if [ $# -lt 1 ]; then
   echo "Usage: $0 <llm_config.yaml>"
   exit 1
 fi
@@ -75,5 +75,5 @@ if ! command -v sbatch &>/dev/null; then
   bash "$SBATCH_SCRIPT"
 else
   sbatch "$SBATCH_SCRIPT"
-  echo "Submitted job with config $LLM_CONFIG
+  echo "Submitted job with config $LLM_CONFIG"
 fi
