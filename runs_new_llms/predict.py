@@ -60,7 +60,7 @@ def group_args_by_topic_with_indices(sampled_args):
     return grouped
 
 # Generate cyclic pairs within each topic group
-def create_cyclic_pairs_within_topics(grouped_args, step=3):
+def create_cyclic_pairs_within_topics(grouped_args, step=5):
     all_pairs = []
     for topic_id, args in grouped_args.items():
         n = len(args)
@@ -183,7 +183,7 @@ def main(cfg: DictConfig):
 
     # Group arguments by topic and generate cyclic pairs within topics
     grouped_args = group_args_by_topic_with_indices(sampled_args)
-    sampled_pairs = create_cyclic_pairs_within_topics(grouped_args, step=3)
+    sampled_pairs = create_cyclic_pairs_within_topics(grouped_args, step=5)
 
     print(f"Generated {len(sampled_pairs)} within-topic cyclic pairs.")
 
