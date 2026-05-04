@@ -147,7 +147,7 @@ def run_dimension_comparison(dimension, sampled_args, pairs, model_name, model_p
 
         # Send prompt to the Together AI model
         resp = llm.chat(
-            messages=[{"role": "user", "content": prompt}],
+            messages=[{"role": "user", "content": p} for p in prompts],
             sampling_params=sampling_params,
         )
         
