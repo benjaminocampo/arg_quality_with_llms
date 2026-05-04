@@ -166,9 +166,9 @@ def run_dimension_comparison(dimension, sampled_args, pairs, model_name, model_p
         reply = [r.outputs[0].text.strip().lower() for r in resp]
         reply_enc = []
         for r in reply:
-            if reply == "a":
+            if r == "a":
                 reply_enc.append("A")
-            elif reply == "b":
+            elif r == "b":
                 reply_enc.append("B")
             else:
                 reply_enc.append("tie")
