@@ -1,6 +1,6 @@
 slurm_params:
   partition: gpu_h100
-  time: 00-00:20:00
+  time: 00-00:30:00
   gres: gpu:h100:4
   mem: 256G
 
