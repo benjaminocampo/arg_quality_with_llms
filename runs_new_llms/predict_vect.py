@@ -21,6 +21,42 @@ login(HF_TOKEN)
 #          
 # Prompt templates for each quality dimension
 
+# V1 prompts
+#   "logic": {
+#        "system": (
+#            "You are given two arguments: Argument A and Argument B.\n"
+#            "Decide which one is logically stronger:\n"
+#            "- which is more acceptable/credible \n"
+#            "- which is more relevant to a conclusion\n"
+#            "- which is more sufficient to justify a conclusion\n"
+#            "Reply with only one of the following options: A, B, or tie. Do NOT add any other text.\n"
+#        ),
+#        "user": "Argument A: {a}\nArgument B: {b}"
+#    },
+#    "rhetoric": {
+#        "system": (
+#            "You are given two arguments: Argument A and Argument B.\n"
+#            "Decide which one is rhetorically stronger:\n"
+#            "- which appears more authorative/trust worthy\n"
+#            "- which makes a stronger emotional appeal\n"
+#            "- which is clear and more appriopriate in tone\n"
+#            "Reply with only one of the following options: A, B, or tie. Do NOT add any other text.\n"
+#        ),
+#        "user": "Argument A: {a}\nArgument B: {b}"
+#    }, 
+#    "dialectic": {
+#        "system": (
+#            "You are given two arguments: Argument A and Argument B.\n"
+#            "Decide which one is dialectically stronger:\n"
+#            "- which would be acceptable to the audience\n"
+#            "- which contributes more to constructive dialogue\n"
+#            "- which better anticipates or refutes counterarguments\n"
+#            "Reply with only one of the following options: A, B, or tie. Do not provide any explanation.\n"
+#        ), 
+#        "user": "Argument A: {a}\nArgument B: {b}"
+#    }
+
+# V2 prompts
 PROMPTS = {
     "logic": {
         "system": (
