@@ -10,7 +10,7 @@ set -euo pipefail
 # Checks that the user passed three argument (the task script file,
 # the experiment config file, and the LLM config file).
 # Otherwise, prints usage and exits.
-if [ $# -lt 4]; then
+if [ $# -lt 4 ]; then
   echo "Usage: $0 <llm_config.yaml> <dim_config.yaml> <prompt_config.yaml> <run_config.yaml>"
   exit 1
 fi
