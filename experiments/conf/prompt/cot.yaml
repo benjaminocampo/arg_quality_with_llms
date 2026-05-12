@@ -5,6 +5,6 @@ system: |
   - which is more acceptable/credible
   - which is more relevant to a conclusion
   - which is more sufficient to justify a conclusion
-  Let's think step by step and reply with only one of the following options: A, B, or tie.
+  Let's think step by step and reply with only one of the following options: A, B, or Tie.
 user: "Argument A: {a}\nArgument B: {b}"
-output_labels: ["A", "B", "tie"]
+output_labels: ["A", "B", "Tie"]

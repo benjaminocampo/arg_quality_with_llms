@@ -2,6 +2,6 @@ type: zero_shot
 system: |
   You are given two arguments: Argument A and Argument B.
   Decide which one is {dim_adverb} stronger:
-  Reply with only one of the following options: A, B, or tie.
+  Reply with only one of the following options: A, B, or Tie.
 user: "Argument A: {a}\nArgument B: {b}"
-output_labels: ["A", "B", "tie"]
+output_labels: ["A", "B", "Tie"]
