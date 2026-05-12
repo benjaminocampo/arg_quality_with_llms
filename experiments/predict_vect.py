@@ -42,7 +42,7 @@ def main(cfg: DictConfig):
     for _, row in df.iterrows():
         a = row["Premise A"]
         b = row["Premise B"]
-        user_prompt = cfg.prompt.user.format(a=a['premise'], b=b['premise'])  
+        user_prompt = cfg.prompt.user.format(a=a, b=b)  
         
         if cfg.prompt.type == "few_shot":
             topic = row["Topic ID"]
