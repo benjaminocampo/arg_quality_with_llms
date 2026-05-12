@@ -3,7 +3,7 @@ defaults:
   - dim: dialectic
   - llm: llama-8B-small
   - prompt: zero_shot
-  - run: "0"
+  - run: zero
 
 
 data_path: ../data/webis_comp_orig.csv
