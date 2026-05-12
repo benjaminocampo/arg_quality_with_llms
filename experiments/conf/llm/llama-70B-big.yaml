@@ -1,0 +1,15 @@
+slurm_params:
+  partition: gpu_h100
+  time: 00-00:40:00
+  gres: gpu:h100:4
+  mem: 256G
+
+name: llama-70B-big
+params:
+  model: meta-llama/Llama-3.3-70B-Instruct
+  max_tokens: 4096
+  max_model_len: 32768
+  max_num_batched_tokens: 32768
+  dtype: auto   # vllm interally often runs with fp16 however xgrammar is not updated to support fp16.
+  tensor_parallel_size: 4
+  temperature: 1

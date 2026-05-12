@@ -1,5 +1,0 @@
-defaults:
-  - _self_
-  - llm: llama_small
-
-data_path: ../webis-argquality20-arguments.csv

@@ -1,0 +1,9 @@
+defaults:
+  - _self_
+  - dim: dialectic
+  - llm: llama-8B-small
+  - prompt: zero_shot
+  - run: "0"
+
+
+data_path: ../data/webis_comp_orig.csv

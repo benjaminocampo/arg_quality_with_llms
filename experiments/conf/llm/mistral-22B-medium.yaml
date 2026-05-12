@@ -1,0 +1,15 @@
+slurm_params:
+  partition: gpu_h100
+  time: 00-00:40:00
+  gres: gpu:h100:1
+  mem: 20G
+
+name: mistral-22B-medium
+params:
+  model: mistralai/Mistral-Small-Instruct-2409
+  max_tokens: 4096
+  max_model_len: 16384
+  max_num_batched_tokens: 16384
+  dtype: auto   # vllm internally often runs with fp16 however xgrammar is not updated to support fp16.
+  tensor_parallel_size: 1
+  temperature: 1

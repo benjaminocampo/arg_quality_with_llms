@@ -1,0 +1,15 @@
+slurm_params:
+  partition: gpu_h100
+  time: 00-00:40:00
+  gres: gpu:h100:1
+  mem: 20G
+
+name: olmo2-32B-medium
+params:
+  model: allenai/OLMo-2-0325-32B-Instruct
+  max_tokens: 4096
+  max_model_len: 4096
+  max_num_batched_tokens: 4096
+  dtype: auto   # vllm internally often runs with fp16 however xgrammar is not updated to support fp16.
+  tensor_parallel_size: 1
+  temperature: 1

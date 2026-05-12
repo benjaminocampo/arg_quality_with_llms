@@ -1,0 +1,15 @@
+slurm_params:
+  partition: gpu_h100
+  time: 00-01:00:00
+  gres: gpu:h100:4
+  mem: 320G
+
+name: mixtral-8x22B-medium
+params:
+  model: mistralai/Mixtral-8x22B-Instruct-v0.1
+  max_tokens: 4096
+  max_model_len: 32768
+  max_num_batched_tokens: 32768
+  dtype: auto   # vllm interally often runs with fp16 however xgrammar is not updated to support fp16.
+  tensor_parallel_size: 4
+  temperature: 1

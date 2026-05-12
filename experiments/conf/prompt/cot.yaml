@@ -1,0 +1,10 @@
+type: cot
+system: |
+  You are given two arguments: Argument A and Argument B.
+  Decide which one is {dim_adverb} stronger considering these criteria:
+  - which is more acceptable/credible
+  - which is more relevant to a conclusion
+  - which is more sufficient to justify a conclusion
+  Let's think step by step and reply with only one of the following options: A, B, or tie.
+user: "Argument A: {a}\nArgument B: {b}"
+output_labels: ["A", "B", "tie"]

@@ -1,0 +1,20 @@
+type: few_shot
+system: |
+  You are given two arguments: Argument A and Argument B.
+  Decide which one is {dim_adverb} stronger:
+  Reply with only one of the following options: A, B, or tie.
+  
+  Examples:
+  Argument A: {ex_A_1}
+  Argument B: {ex_A_2}
+  A
+
+  Argument A: {ex_B_1}
+  Argument B: {ex_B_2}
+  B
+
+  Argument A: {ex_tie_1}
+  Argument B: {ex_tie_2}
+  tie
+user: "Argument A: {a}\nArgument B: {b}"
+output_labels: ["A", "B", "tie"]

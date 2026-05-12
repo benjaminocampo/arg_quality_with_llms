@@ -1,0 +1,15 @@
+slurm_params:
+  partition: gpu_h100
+  time: 00-00:40:00
+  gres: gpu:h100:1
+  mem: 20G
+
+name: commandr-7B-small
+params:
+  model: CohereLabs/c4ai-command-r7b-12-2024
+  max_tokens: 4096
+  max_model_len: 32768
+  max_num_batched_tokens: 32768
+  dtype: auto   # vllm interally often runs with fp16 however xgrammar is not updated to support fp16.
+  tensor_parallel_size: 1
+  temperature: 1
