@@ -33,7 +33,7 @@ def main(cfg: DictConfig):
         
     guided_decoding_params = GuidedDecodingParams(choice=cfg.prompt.output_labels)
     sampling_params = SamplingParams(
-        temperature=cfg.temperature, # While it is a model parameter, all runs should use the same one.
+        temperature=cfg.llm.params.temperature, # While it is a model parameter, all runs should use the same one.
         max_tokens=cfg.llm.params.max_tokens,
         guided_decoding_params=guided_decoding_params
     )
@@ -72,7 +72,7 @@ def main(cfg: DictConfig):
     df[f"Pred Comparison {cfg.dim.name.capitalize()}"] = reply
 
     filename = f"{cfg.llm.name}_{cfg.dim.name}_{cfg.prompt.type}_{cfg.run.run_id}.csv"
-    df.to_csv(filename)
+    df.to_csv(f"../gens/{filename}")
 
 if __name__ == "__main__":
     main()
