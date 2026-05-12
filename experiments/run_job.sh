@@ -68,7 +68,7 @@ cat <<EOF > "$SBATCH_SCRIPT"
 #SBATCH --error=./logs/${JOB_NAME}.err
 
 source ../${ENV_NAME}/bin/activate
-python predict.py \\
+python predict_vect.py \\
     llm=${LLM_NAME} \\
     dim=${DIM_NAME} \\
     prompt=${PROMPT_TYPE} \\
