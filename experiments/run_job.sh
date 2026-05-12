@@ -10,22 +10,22 @@ set -euo pipefail
 # Checks that the user passed three argument (the task script file,
 # the experiment config file, and the LLM config file).
 # Otherwise, prints usage and exits.
-if [ $# -lt 1 ]; then
-  echo "Usage: $0 <llm_config.yaml>"
+if [ $# -lt 4]; then
+  echo "Usage: $0 <llm_config.yaml> <dim_config.yaml> <prompt_config.yaml> <run_config.yaml>"
   exit 1
 fi
 
-# Always create mlruns directory
-mkdir -p mlruns
-
-# If Slurm is available, also ensure slurmerr and slurmout exist
+# If Slurm is available, also ensure logs exists
 if command -v sbatch &>/dev/null; then
-  mkdir -p slurmerr slurmout
+  mkdir -p logs
 fi
 
 ENV_NAME="arg_quality_with_llms_venv"
 
 LLM_CONFIG=$1
+DIM_CONFIG=$2
+PROMPT_CONFIG=$3
+RUN_CONFIG=$4
 
 # Takes config file
 # Small inline Python helper to extract YAML values
@@ -48,8 +48,11 @@ PARTITION=$(get_yaml "$LLM_CONFIG" "data['slurm_params']['partition']")
 TIME=$(get_yaml "$LLM_CONFIG" "data['slurm_params']['time']")
 GRES=$(get_yaml "$LLM_CONFIG" "data['slurm_params']['gres']")
 MEM=$(get_yaml "$LLM_CONFIG" "data['slurm_params']['mem']")
+PROMPT_TYPE=$(get_yaml "$PROMPT_CONFIG" "data['type']")
+DIM_NAME=$(get_yaml "$DIM_CONFIG" "data['name']")
+RUN_ID=$(get_yaml "$RUN_CONFIG" "data['run_id']")
 
-JOB_NAME="${LLM_NAME}"
+JOB_NAME="${LLM_NAME}_${DIM_NAME}_${PROMPT_TYPE}_${RUN_ID}"
 
 # Create sbatch script
 SBATCH_SCRIPT=$(mktemp)
@@ -61,12 +64,15 @@ cat <<EOF > "$SBATCH_SCRIPT"
 #SBATCH --time=${TIME}
 #SBATCH --gres=${GRES}
 #SBATCH --mem=${MEM}
-#SBATCH --output=./slurmout/${JOB_NAME}.out
-#SBATCH --error=./slurmerr/${JOB_NAME}.err
+#SBATCH --output=./logs/${JOB_NAME}.out
+#SBATCH --error=./logs/${JOB_NAME}.err
 
 source ../${ENV_NAME}/bin/activate
 python predict.py \\
     llm=${LLM_NAME} \\
+    dim=${DIM_NAME} \\
+    prompt=${PROMPT_TYPE} \\
+    run=${RUN_ID}
 EOF
 
 # If Slurm is not available, just print the job script
@@ -75,5 +81,5 @@ if ! command -v sbatch &>/dev/null; then
   bash "$SBATCH_SCRIPT"
 else
   sbatch "$SBATCH_SCRIPT"
-  echo "Submitted job with config $LLM_CONFIG"
+  echo "Submitted job with config $LLM_CONFIG, $DIM_CONFIG, $PROMPT_CONFIG, and $RUN_CONFIG"
 fi
