@@ -72,7 +72,7 @@ def main(cfg: DictConfig):
     df[f"Pred Comparison {cfg.dim.name.capitalize()}"] = reply
 
     filename = f"{cfg.llm.name}_{cfg.dim.name}_{cfg.prompt.type}_{cfg.run.run_id}.csv"
-    df.to_csv(f"../gens/{filename}")
+    df.to_csv(f"../gens/{filename}", index=False)
 
 if __name__ == "__main__":
     main()
