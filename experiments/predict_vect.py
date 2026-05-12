@@ -35,7 +35,7 @@ def main(cfg: DictConfig):
     sampling_params = SamplingParams(
         temperature=cfg.llm.params.temperature, # While it is a model parameter, all runs should use the same one.
         max_tokens=cfg.llm.params.max_tokens,
-        guided_decoding_params=guided_decoding_params
+        guided_decoding=guided_decoding_params
     )
 
     prompts = []
