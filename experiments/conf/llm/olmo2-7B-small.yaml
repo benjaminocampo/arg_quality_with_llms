@@ -13,4 +13,3 @@ params:
   dtype: auto   # vllm internally often runs with fp16 however xgrammar is not updated to support fp16.
   tensor_parallel_size: 1
   temperature: 1
-  temperature: 1
