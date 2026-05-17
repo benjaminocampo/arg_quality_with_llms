@@ -29,11 +29,13 @@ def main(cfg: DictConfig):
         dtype=cfg.llm.params.dtype
     )
 
-    system_prompt = cfg.prompt.system.format(dim_adverb=cfg.dim.dim_adverb)
+    system_prompt = cfg.prompt.system
+    if cfg.prompt.type != "few_shot":
+        system_prompt = system_prompt.format(dim_adverb=cfg.dim.dim_adverb)
         
     guided_decoding_params = GuidedDecodingParams(choice=cfg.prompt.output_labels)
     sampling_params = SamplingParams(
-        temperature=cfg.llm.params.temperature, # While it is a model parameter, all runs should use the same one.
+        temperature=cfg.llm.params.temperature, # While it is a model parameter, all runs should use the same one for this experiment.
         max_tokens=cfg.llm.params.max_tokens,
         guided_decoding=guided_decoding_params
     )
@@ -46,7 +48,8 @@ def main(cfg: DictConfig):
         
         if cfg.prompt.type == "few_shot":
             topic = row["Topic ID A"]
-            system_prompt.format(
+            system_prompt = system_prompt.format(
+                dim_adverb=cfg.dim.dim_adverb,
                 ex_A_argA=cfg.prompt.examples[f"tid_{topic}"][cfg.dim.name]["ex_A_argA"],
                 ex_A_argB=cfg.prompt.examples[f"tid_{topic}"][cfg.dim.name]["ex_A_argB"],
                 ex_B_argA=cfg.prompt.examples[f"tid_{topic}"][cfg.dim.name]["ex_B_argA"],
