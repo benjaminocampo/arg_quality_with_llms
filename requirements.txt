@@ -3,3 +3,6 @@ pandas
 google-generativeai
 vllm==0.10.2
 hydra-core
+choix
+krippendorff
+scikit-learn
