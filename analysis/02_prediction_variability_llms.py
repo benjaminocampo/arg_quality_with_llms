@@ -7,7 +7,7 @@ df_scores = pd.read_csv("../data/webis_only_args_all_pred_llms.csv")
 MODEL_NAMES = [
     "mistral-7B-small",
     "llama-8B-small",
-    #"olmo2-7B-small",
+    "olmo2-7B-small",
     "qwen2.5-7B-small",
     "commandr-7B-small",
     "mixtral-8x7B-medium",
@@ -19,7 +19,7 @@ MODEL_NAMES = [
     "commandr-104B-big"
 ]
 DIMENSIONS   = ["logic", "rhetoric", "dialectic"]
-PROMPTS = ["zero_shot"]
+PROMPTS = ["zero_shot", "cot"]
 # %%
 from collections import Counter
 
@@ -58,7 +58,7 @@ for model_name in MODEL_NAMES:
 # %%
 df_pred_var = pd.DataFrame(results).T
 # %%
-d_pred_var = df_pred_var.rename(columns={3: "3", 2: "2", 1: "1"})
+df_pred_var = df_pred_var.rename(columns={3: "3", 2: "2", 1: "1"})
 # %%
-d_pred_var[["3", "3_%", "2", "2_%", "1", "1_%", "krip_alpha"]].round(2)
+df_pred_var[["3", "3_%", "2", "2_%", "1", "1_%", "krip_alpha"]].round(2)
 # %%

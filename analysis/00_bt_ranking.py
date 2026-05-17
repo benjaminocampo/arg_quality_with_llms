@@ -2,13 +2,12 @@
 import pandas as pd
 import numpy as np
 import choix
-from pathlib import Path
 
 
 MODEL_NAMES = [
     "mistral-7B-small",
     "llama-8B-small",
-    #"olmo2-7B-small",
+    "olmo2-7B-small",
     "qwen2.5-7B-small",
     "commandr-7B-small",
     "mixtral-8x7B-medium",
@@ -19,8 +18,8 @@ MODEL_NAMES = [
     "qwen2.5-72B-big",
     "commandr-104B-big"
 ]
-DIMENSIONS   = ["logic", "rhetoric", "dialectic"]
-PROMPTS = ["zero_shot"]
+DIMENSIONS = ["logic", "rhetoric", "dialectic"]
+PROMPTS = ["zero_shot", "cot"]
 RUN_IDS = ["zero", "one", "two"]
 # %% [markdown]
 # Counting system

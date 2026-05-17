@@ -7,7 +7,7 @@ df = pd.read_csv("../data/webis_only_args_all_pred_llms.csv")
 MODEL_NAMES = [
     "mistral-7B-small",
     "llama-8B-small",
-    #"olmo2-7B-small",
+    "olmo2-7B-small",
     "qwen2.5-7B-small",
     "commandr-7B-small",
     "mixtral-8x7B-medium",
@@ -19,7 +19,7 @@ MODEL_NAMES = [
     "commandr-104B-big"
 ]
 DIMENSIONS   = ["logic", "rhetoric", "dialectic"]
-PROMPTS = ["zero_shot"]
+PROMPTS = ["zero_shot", "cot"]
 # %%
 from sklearn.metrics import cohen_kappa_score
 

@@ -45,14 +45,14 @@ def main(cfg: DictConfig):
         user_prompt = cfg.prompt.user.format(a=a, b=b)  
         
         if cfg.prompt.type == "few_shot":
-            topic = row["Topic ID"]
+            topic = row["Topic ID A"]
             system_prompt.format(
-                ex_A_1=cfg.prompt.examples[topic]["ex_A_1"],
-                ex_A_2=cfg.prompt.examples[topic]["ex_A_2"],
-                ex_B_1=cfg.prompt.examples[topic]["ex_B_1"],
-                ex_B_2=cfg.prompt.examples[topic]["ex_B_2"],
-                ex_tie_1=cfg.prompt.examples[topic]["ex_tie_1"],
-                ex_tie_2=cfg.prompt.examples[topic]["ex_tie_2"],
+                ex_A_argA=cfg.prompt.examples[f"tid_{topic}"][cfg.dim.name]["ex_A_argA"],
+                ex_A_argB=cfg.prompt.examples[f"tid_{topic}"][cfg.dim.name]["ex_A_argB"],
+                ex_B_argA=cfg.prompt.examples[f"tid_{topic}"][cfg.dim.name]["ex_B_argA"],
+                ex_B_argB=cfg.prompt.examples[f"tid_{topic}"][cfg.dim.name]["ex_B_argB"],
+                ex_tie_argA=cfg.prompt.examples[f"tid_{topic}"][cfg.dim.name]["ex_tie_argA"],
+                ex_tie_argB=cfg.prompt.examples[f"tid_{topic}"][cfg.dim.name]["ex_tie_argB"],
             )
         
         prompts.append(

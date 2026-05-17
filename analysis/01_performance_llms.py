@@ -11,7 +11,7 @@ df_scores.columns
 MODEL_NAMES = [
     "mistral-7B-small",
     "llama-8B-small",
-    #"olmo2-7B-small",
+    "olmo2-7B-small",
     "qwen2.5-7B-small",
     "commandr-7B-small",
     "mixtral-8x7B-medium",
@@ -23,7 +23,7 @@ MODEL_NAMES = [
     "commandr-104B-big"
 ]
 DIMENSIONS   = ["logic", "rhetoric", "dialectic"]
-PROMPTS = ["zero_shot"]
+PROMPTS = ["zero_shot", "cot"]
 # %%
 uncovered_args = []
 for model_name in MODEL_NAMES:
@@ -72,5 +72,5 @@ for model_name in MODEL_NAMES:
             results[f"{model_name}_{dim}_{prompt}"]["mae"] = mae
             results[f"{model_name}_{dim}_{prompt}"]["rmse"] = rmse
 # %%
-pd.DataFrame(results).T.loc.round(3)
+pd.DataFrame(results).T.round(3)
 # %%
