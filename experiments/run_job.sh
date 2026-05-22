@@ -67,10 +67,6 @@ cat <<EOF > "$SBATCH_SCRIPT"
 #SBATCH --output=./logs/${JOB_NAME}.out
 #SBATCH --error=./logs/${JOB_NAME}.err
 
-#SBATCH --ear=on
-#SBATCH --ear-policy=monitoring
-#SBATCH --ear-verbose=1
-
 source ../${ENV_NAME}/bin/activate
 python predict_vect.py \\
     llm=${LLM_NAME} \\
