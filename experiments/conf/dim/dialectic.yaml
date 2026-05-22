@@ -1,2 +1,7 @@
 name: dialectic
 dim_adverb: dialectically
+dim_criterias: [
+  "which would be acceptable to the audience? Argumentation is acceptable if the target audience accepts both the consideration of the stated arguments for the issue and the way they are stated.",
+  "which contributes more to constructive dialogue? Argumentation is relevant if it contributes to the issue's resolution, i.e., if it states arguments or other information that help to arrive at an ultimate conclusion.",
+  "which better anticipates or refutes counterarguments? Argumentation is sufficient if it adequately rebuts those counterarguments to it that can be anticipated."
+]

@@ -21,17 +21,20 @@ def main(cfg: DictConfig):
 
     df = pd.read_csv(cfg.data_path)
 
-    llm = LLM(
-        model=cfg.llm.params.model,
-        tensor_parallel_size=cfg.llm.params.tensor_parallel_size,
-        max_model_len=cfg.llm.params.max_model_len,
-        max_num_batched_tokens=cfg.llm.params.max_num_batched_tokens,
-        dtype=cfg.llm.params.dtype
-    )
+    #llm = LLM(
+    #    model=cfg.llm.params.model,
+    #    tensor_parallel_size=cfg.llm.params.tensor_parallel_size,
+    #    max_model_len=cfg.llm.params.max_model_len,
+    #    max_num_batched_tokens=cfg.llm.params.max_num_batched_tokens,
+    #    dtype=cfg.llm.params.dtype
+    #)
 
     system_prompt = cfg.prompt.system
-    if cfg.prompt.type != "few_shot":
+    if cfg.prompt.type == "zero_shot":
         system_prompt = system_prompt.format(dim_adverb=cfg.dim.dim_adverb)
+    elif cfg.prompt.type == "cot":
+        dim_criterias = "\n".join([f"- {criteria}" for criteria in cfg.dim.dim_criterias])
+        system_prompt = system_prompt.format(dim_adverb=cfg.dim.dim_adverb, dim_criterias=dim_criterias)
         
     guided_decoding_params = GuidedDecodingParams(choice=cfg.prompt.output_labels)
     sampling_params = SamplingParams(
@@ -64,6 +67,7 @@ def main(cfg: DictConfig):
                 {"role": "user", "content": user_prompt}
             ]
         )
+    import pdb; pdb.set_trace()
 
     resp = llm.chat(
         messages=prompts,

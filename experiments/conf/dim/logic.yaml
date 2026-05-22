@@ -1,2 +1,7 @@
 name: logic
 dim_adverb: logically
+dim_criterias: [
+  "which is more acceptable? A premise of an argument is acceptable if it is rationally worthy of being believed to be true.",
+  "which is more relevant to a conclusion? A premise of an argument is relevant if it contributes to the acceptance or rejection of the argument's conclusion.",
+  "which is more sufficient to justify a conclusion? An argument's premises are sufficient if, together, they give enough support to make it rational to draw its conclusion."
+]

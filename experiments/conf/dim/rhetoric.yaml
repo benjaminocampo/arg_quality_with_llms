@@ -1,2 +1,9 @@
 name: rhetoric
 dim_adverb: rhetorically
+dim_criterias: [
+  "which appears more authorative/trust worthy? Argumentation creates credibility if it conveys arguments and similar in a way that makes the author worthy of credence.",
+  "which makes a stronger emotional appeal? Argumentation makes a successful emotional appeal if it creates emotions in a way that makes the target audience more open to the author's arguments.",
+  "which has a clearer style? Argumentation has a clear style if it uses correct and widely unambiguous language as well as if it avoids unnecessary complexity and deviation from the issue.",
+  "which has a more appropiate style? Argumentation has an appropriate style if the used language supports the creation of credibility and emotions as well as if it is proportional to the issue.",
+  "Which is better arranged? Argumentation is arranged properly if it presents the issue, the arguments, and its conclusion in the right order."
+]
