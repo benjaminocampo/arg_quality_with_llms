@@ -1,0 +1,1 @@
+The resources in this repository are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0). To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
