@@ -19,7 +19,9 @@ MODEL_NAMES = [
     "commandr-104B-big"
 ]
 DIMENSIONS = ["logic", "rhetoric", "dialectic"]
-PROMPTS = ["zero_shot", "cot"]
+#DIMENSIONS = ["logic", "rhetoric", "dialectic"]
+PROMPTS = ["zero_shot", "few_shot", "cot"]
+#PROMPTS = ["cot"]
 RUN_IDS = ["zero", "one", "two"]
 # %% [markdown]
 # Counting system

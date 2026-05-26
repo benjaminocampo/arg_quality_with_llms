@@ -19,7 +19,7 @@ MODEL_NAMES = [
     "commandr-104B-big"
 ]
 DIMENSIONS   = ["logic", "rhetoric", "dialectic"]
-PROMPTS = ["zero_shot", "cot"]
+PROMPTS = ["zero_shot", "few_shot", "cot"]
 # %%
 from collections import Counter
 
@@ -61,4 +61,42 @@ df_pred_var = pd.DataFrame(results).T
 df_pred_var = df_pred_var.rename(columns={3: "3", 2: "2", 1: "1"})
 # %%
 df_pred_var[["3", "3_%", "2", "2_%", "1", "1_%", "krip_alpha"]].round(2)
+# %%
+df_pred_var
+# %%
+model_names, dims, prompts = zip(*(r.split("_") for r in df_pred_var.index))
+
+model_names = list(model_names)
+dims = list(dims)
+prompts = list(prompts)
+# %%
+# df_results_all = pd.concat([df_results_bt, df_results_agreement], axis=1)
+# %%
+df_pred_var["Model"] = model_names
+df_pred_var["Dim"] = dims
+df_pred_var["Prompt"] = prompts
+# %%
+df_pred_var_mean_std = (
+    df_pred_var
+    .reset_index(drop=True)
+    .drop(columns=["Dim"])
+    .groupby(["Model", "Prompt"])
+    .agg(["mean", "std"])
+    .round(2)
+    .loc[:, ["3", "3_%", "2", "2_%", "1", "1_%", "krip_alpha"]]
+)
+# %%
+from itertools import product
+pairs = list(product(MODEL_NAMES, [p.replace("_shot", "") for p in PROMPTS]))
+# %%
+df_results_pm = pd.DataFrame(index=df_pred_var_mean_std.index)
+
+for col in df_pred_var_mean_std.columns.levels[0]:
+    df_results_pm[col] = (
+        df_pred_var_mean_std[(col, "mean")].map("{:.2f}".format)
+        + " $\pm$ "
+        + df_pred_var_mean_std[(col, "std")].map("{:.2f}".format)
+    )
+# %%
+print(df_results_pm.loc[pairs, ["3", "3_%", "2", "2_%", "1", "1_%", "krip_alpha"]].to_latex())
 # %%

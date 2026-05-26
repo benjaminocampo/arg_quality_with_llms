@@ -6,3 +6,4 @@ hydra-core
 choix
 krippendorff
 scikit-learn
+seaborn
