@@ -99,5 +99,16 @@ to reproduce the tables, plots, and results presented in the paper.
 - `04_bt_distplots.py`, which uses `data/webis_only_args_bt_scores.csv` to
   generate the BT score distributions reported in Figure 1 for the best model
   configuration.
-- `05_few_shot_examples/`, which contains the code used to select the few-shot
+- `05_few_shot_examples.py`, which contains the code used to select the few-shot
   examples employed in our experiments.
+
+## Extra tables for footnotes 4 and 5 of the paper
+
+Given the 12 LLMs, 3 prompts, and 3 dimensions (108 total rows), we did not
+include the full table in either the main paper or the appendix. Instead, we
+report the average scores across the three dimensions (36 rows) and provide the
+complete 108-row table as supplementary material in this repository.
+
+These results are saved in `supplementary_results/` namely
+`llm_performance_per_llm_prompt_dim.csv` for footnote 4, and
+`best_llm_vs_others_per_llm_prompt_dim.csv` for footnote 5.
