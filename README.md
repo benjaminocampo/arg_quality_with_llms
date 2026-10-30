@@ -112,3 +112,28 @@ complete 108-row table as supplementary material in this repository.
 These results are saved in `supplementary_results/` namely
 `llm_performance_per_llm_prompt_dim.csv` for footnote 4, and
 `best_llm_vs_others_per_llm_prompt_dim.csv` for footnote 5.
+
+## Cite Us
+
+```
+@inproceedings{ocampo-etal-2026-argument,
+    title = "Argument Quality Assessment with Large Language Models: A Pairwise Bradley-Terry Approach",
+    author = "Ocampo, Nicol{\'a}s Benjam{\'i}n  and
+      Nyiranziza, Agnes Paullate  and
+      Ceolin, Davide",
+    editor = "Lee, Hung-Yi  and
+      Dev, Sunipa  and
+      Li, Jessy  and
+      Elliott, Desmond",
+    booktitle = "Findings of the {A}ssociation for {C}omputational {L}inguistics: {EMNLP} 2026",
+    month = oct,
+    year = "2026",
+    address = "Budapest, Hungary",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2026.findings-emnlp.1175/",
+    doi = "10.18653/2026.findings-emnlp.1175",
+    pages = "24842--24857",
+    ISBN = "979-8-89176-462-0",
+    abstract = "Large Language Models (LLMs) have demonstrated remarkable capabilities in tasks related to reasoning and judgment. However, assessing the quality of arguments requires a rigorous evaluation. We investigate the extent to which LLMs can effectively perform this task. We tested 12 open-weight LLMs of different sizes and families under zero-shot, few-shot, and chain-of-thought to approximate human pairwise comparisons of argument quality across three dimensions{---}logical, rhetorical, and dialectic{---}and used these comparisons in a Bradley-Terry model to infer latent strength scores and derive a ranking of arguments. Our insights show that LLMs have promising but moderate correlation with human judgment, with Llama-70B obtaining the strongest alignment, reaching moderate Cohen{'}s {\ensuremath{\kappa}} = 0.493 and moderate correlations with Bradley-Terry scores derived from these annotations (Kendall, Pearson, and Spearman: 0.327-0.477). Other LLMs exhibit weak, moderate, or high alignment with Llama-70B while achieving comparable results against human judgment, suggesting partial but complementary understanding of underlying quality dimensions despite differences in model size and family. Moreover, LLM predictions are stable across trial runs, with fewer than 7.75{\%} of cases yielding different labels. Remaining variability is handled via majority voting and few-shot prompting for large-size models."
+}
+```
